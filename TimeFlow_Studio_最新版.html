@@ -3974,24 +3974,8 @@
         let ytApiReady = false;
         let ytPendingVideoId = null;
 
-        // YouTube API 載入完成時自動呼叫
-        function onYouTubeIframeAPIReady() {
-            try {
-                ytApiReady = true;
-                ytPlayer = new YT.Player('yt-player', {
-                    height: '150', width: '100%',
-                    playerVars: { playsinline: 1, controls: 1, rel: 0 },
-                    events: {
-                        onReady: () => {
-                            try { ytPlayer.setVolume(Math.round((state.focusTimer.volume || 0.5) * 100)); } catch (e) {}
-                            if (ytPendingVideoId) { ytPlayer.loadVideoById(ytPendingVideoId); ytPendingVideoId = null; }
-                        },
-                        onStateChange: onYtStateChange,
-                        onError: () => { showToast("⚠️ 此 YouTube 影片無法嵌入播放（上傳者可能停用嵌入），請換一支影片。"); }
-                    }
-                });
-            } catch (e) { console.warn("YT init failed", e); }
-        }
+        // YouTube API 載入完成（目前改用直接內嵌播放，這裡僅記錄就緒狀態）
+        function onYouTubeIframeAPIReady() { ytApiReady = true; }
         window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
 
         function onYtStateChange(e) {
@@ -4032,31 +4016,37 @@
             if (aud) aud.classList.toggle('hidden', show);
         }
         function stopYouTube() {
-            try { if (ytPlayer && ytPlayer.stopVideo) ytPlayer.stopVideo(); } catch (e) {}
-            showYtPlayer(false);
+            // 直接嵌入式播放：清掉 iframe 即停止
+            const wrap = document.getElementById('yt-player-wrap');
+            if (wrap) { wrap.innerHTML = ''; wrap.classList.add('hidden'); }
+            const aud = document.getElementById('focus-audio-el');
+            if (aud) aud.classList.remove('hidden');
         }
         function pauseCurrentMusic() {
             const track = state.playlist.find(t => t.id === state.currentTrackId);
-            if (track && track.type === 'youtube') { try { if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo(); } catch (e) {} }
+            if (track && track.type === 'youtube') { stopYouTube(); }
             else if (focusAudioElement) focusAudioElement.pause();
         }
+        // 直接用 YouTube 內嵌播放器（最相容：file:// 直接開檔也能載入；不依賴 JS API）
         function playYouTubeTrack(track) {
             state.focusTimer.audioSourceType = 'youtube';
             state.focusTimer.audioTitle = track.title;
             if (focusAudioElement) focusAudioElement.pause();
-            showYtPlayer(true);
-            if (!ytApiReady || !ytPlayer || !ytPlayer.loadVideoById) {
-                ytPendingVideoId = track.videoId;
-                showToast("⏳ YouTube 播放器載入中，準備就緒後會自動播放…");
-                return;
-            }
-            try {
-                ytPlayer.loadVideoById(track.videoId);
-                ytPlayer.setVolume(Math.round((state.focusTimer.volume || 0.5) * 100));
+            stopBuiltinNoise();
+            const wrap = document.getElementById('yt-player-wrap');
+            const aud = document.getElementById('focus-audio-el');
+            if (aud) aud.classList.add('hidden');
+            if (wrap) {
+                wrap.classList.remove('hidden');
+                wrap.innerHTML =
+                    '<iframe id="yt-frame" width="100%" height="190" style="display:block;border:0" ' +
+                    'src="https://www.youtube.com/embed/' + encodeURIComponent(track.videoId) +
+                    '?autoplay=1&playsinline=1&rel=0" ' +
+                    'allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>' +
+                    '<div class="text-[10px] text-slate-400 px-2 py-1">若顯示「無法播放」，多半是該影片停用嵌入，請換一支；音量請用播放器內的喇叭鈕調整。 ' +
+                    '<a href="https://www.youtube.com/watch?v=' + encodeURIComponent(track.videoId) + '" target="_blank" rel="noopener" class="text-sky-600 font-bold underline">在 YouTube 開啟</a></div>';
                 musicIsPlaying = true;
                 renderPlaylist(); updateFocusUI();
-            } catch (e) {
-                showToast("⚠️ YouTube 播放失敗，請重試或換一支影片。");
             }
         }
 
@@ -4125,26 +4115,30 @@
             const customName = getCustomTrackName();
             const ytId = parseYouTubeId(url);
             if (ytId) {
-                // YouTube 連結 → 用 YT 播放器
+                // YouTube 連結 → 內嵌播放器，加入後立即播放（此刻有使用者點擊手勢）
                 const title = customName || 'YouTube 音樂';
-                state.playlist.push({ id: 'trk-' + Date.now(), title, type: 'youtube', videoId: ytId, url, userNamed: !!customName });
+                const newId = 'trk-' + Date.now();
+                state.playlist.push({ id: newId, title, type: 'youtube', videoId: ytId, url, userNamed: !!customName });
                 input.value = "";
                 saveStateToLocalStorage();
                 renderPlaylist();
-                showToast(`▶️ 已加入 YouTube：${title}`);
+                showToast(`▶️ 已加入並開始播放：${title}`);
+                playTrack(newId);
                 return;
             }
             const derived = (decodeURIComponent(url.split('/').pop()) || '網路音樂').split('?')[0];
             const title = customName || derived;
             // 提醒：非音訊直連（Spotify 等網頁）無法播放
             if (!/\.(mp3|m4a|aac|ogg|oga|wav|flac|opus|webm)(\?|#|$)/i.test(url) && !url.startsWith('data:')) {
-                showToast("⚠️ 此連結看起來不是音訊直連，可能無法播放。已加入，請試播看看。");
+                showToast("⚠️ 此連結看起來不是音訊直連，可能無法播放。已加入並試播看看。");
             }
-            state.playlist.push({ id: 'trk-' + Date.now(), title, type: 'url', url, userNamed: !!customName });
+            const newUrlId = 'trk-' + Date.now();
+            state.playlist.push({ id: newUrlId, title, type: 'url', url, userNamed: !!customName });
             input.value = "";
             saveStateToLocalStorage();
             renderPlaylist();
-            showToast(`➕ 已加入歌單：${title}`);
+            showToast(`➕ 已加入並開始播放：${title}`);
+            playTrack(newUrlId);
         }
         function addTrackFromFile(event) {
             const file = event.target.files[0];
@@ -4153,10 +4147,12 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
-                    state.playlist.push({ id: 'trk-' + Date.now(), title: customName || file.name, type: 'file', url: e.target.result, userNamed: !!customName });
+                    const newFileId = 'trk-' + Date.now();
+                    state.playlist.push({ id: newFileId, title: customName || file.name, type: 'file', url: e.target.result, userNamed: !!customName });
                     saveStateToLocalStorage();
                     renderPlaylist();
-                    showToast(`🎵 已加入本機音樂：${customName || file.name}`);
+                    showToast(`🎵 已加入並開始播放：${customName || file.name}`);
+                    playTrack(newFileId);
                 } catch (err) {
                     showToast("⚠️ 檔案過大無法儲存，建議改用連結或較小檔案。");
                 }
