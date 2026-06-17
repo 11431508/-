@@ -745,6 +745,17 @@
                                 重設
                             </button>
                         </div>
+                        <!-- 結束時的提醒方式 -->
+                        <div class="flex items-center justify-center gap-4 pt-1">
+                            <label class="flex items-center gap-1.5 text-[11px] font-bold text-slate-600 cursor-pointer">
+                                <input type="checkbox" id="timer-sound-enable" checked onchange="setTimerSound(this.checked)" class="accent-sky-500 w-3.5 h-3.5">
+                                <i data-lucide="volume-2" class="w-3.5 h-3.5 text-sky-500"></i> 音效
+                            </label>
+                            <label class="flex items-center gap-1.5 text-[11px] font-bold text-slate-600 cursor-pointer">
+                                <input type="checkbox" id="timer-vibrate-enable" checked onchange="setTimerVibrate(this.checked)" class="accent-sky-500 w-3.5 h-3.5">
+                                <i data-lucide="smartphone" class="w-3.5 h-3.5 text-sky-500"></i> 震動
+                            </label>
+                        </div>
                     </div>
 
                     <!-- 秒錶 -->
@@ -807,7 +818,7 @@
         <div class="bg-white border border-sky-200 w-full max-w-md rounded-2xl p-6 shadow-xl space-y-4">
             <div class="flex justify-between items-center border-b border-sky-100 pb-3">
                 <h3 id="task-modal-title" class="text-sm font-extrabold text-sky-950">新增待辦任務</h3>
-                <button type="button" onclick="closeTaskModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-4 h-4"></i></button>
+                <button type="button" onclick="closeTaskModal()" title="關閉" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-white hover:bg-rose-500 transition-all text-xl leading-none font-bold">✕</button>
             </div>
             
             <input type="hidden" id="task-modal-id">
@@ -876,6 +887,7 @@
             </div>
 
             <div class="flex gap-2 pt-2 border-t border-sky-100">
+                <button type="button" id="task-modal-delete-btn" onclick="deleteTaskFromModal()" class="hidden bg-rose-50 hover:bg-rose-500 hover:text-white text-rose-600 border border-rose-200 text-xs font-bold py-2 px-3 rounded-xl flex items-center gap-1.5" title="刪除此事項"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i> 刪除</button>
                 <button type="button" onclick="closeTaskModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold py-2 rounded-xl">取消</button>
                 <button type="button" onclick="saveTask()" class="flex-1 bg-gradient-to-r from-sky-500 to-blue-600 text-white text-xs font-black py-2 rounded-xl">保存事項</button>
             </div>
@@ -914,7 +926,7 @@
         <div class="bg-white border border-sky-200 w-full max-w-md rounded-2xl p-6 shadow-xl space-y-4">
             <div class="flex justify-between items-center border-b border-sky-100 pb-3">
                 <h3 id="routine-modal-title" class="text-sm font-extrabold text-sky-950">建立日常例行公事 (課表 / 習慣)</h3>
-                <button onclick="closeRoutineModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-4 h-4"></i></button>
+                <button onclick="closeRoutineModal()" title="關閉" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-white hover:bg-rose-500 transition-all text-xl leading-none font-bold">✕</button>
             </div>
 
             <input type="hidden" id="routine-modal-id">
@@ -977,7 +989,7 @@
         <div class="bg-white border border-sky-200 w-full max-w-sm rounded-2xl p-6 shadow-xl space-y-4">
             <div class="flex justify-between items-center border-b border-sky-100 pb-3">
                 <h3 id="alarm-modal-heading" class="text-sm font-extrabold text-sky-950">新增自訂鬧鐘</h3>
-                <button onclick="closeAlarmModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-4 h-4"></i></button>
+                <button onclick="closeAlarmModal()" title="關閉" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-white hover:bg-rose-500 transition-all text-xl leading-none font-bold">✕</button>
             </div>
 
             <input type="hidden" id="alarm-modal-id">
@@ -1034,7 +1046,7 @@
         <div class="bg-white border border-sky-200 w-full max-w-sm rounded-2xl p-6 shadow-xl space-y-4">
             <div class="flex justify-between items-center border-b border-sky-100 pb-3">
                 <h3 id="countdown-modal-heading" class="text-sm font-extrabold text-sky-950">新增倒數</h3>
-                <button onclick="closeCountdownModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-4 h-4"></i></button>
+                <button onclick="closeCountdownModal()" title="關閉" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-white hover:bg-rose-500 transition-all text-xl leading-none font-bold">✕</button>
             </div>
 
             <input type="hidden" id="countdown-modal-id">
@@ -1061,7 +1073,7 @@
         <div class="bg-white border border-sky-200 w-full max-w-md rounded-2xl p-6 shadow-xl space-y-4">
             <div class="flex justify-between items-center border-b border-sky-100 pb-3">
                 <h3 class="text-sm font-extrabold text-sky-950">管理分類標籤與色彩</h3>
-                <button onclick="closeCategoryModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-4 h-4"></i></button>
+                <button onclick="closeCategoryModal()" title="關閉" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-white hover:bg-rose-500 transition-all text-xl leading-none font-bold">✕</button>
             </div>
 
             <!-- 新增自訂分類 -->
@@ -1110,7 +1122,7 @@
         <div class="bg-white border border-sky-200 w-full max-w-lg rounded-2xl p-6 shadow-xl space-y-5 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-sky-100 pb-3">
                 <h3 class="text-sm font-extrabold text-sky-950 flex items-center gap-2"><i data-lucide="settings" class="w-4 h-4 text-sky-600"></i> 個人化設定</h3>
-                <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-slate-600 flex items-center gap-1 text-xs font-bold"><i data-lucide="x" class="w-4 h-4"></i> 關閉</button>
+                <button onclick="closeSettingsModal()" title="關閉" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-white hover:bg-rose-500 transition-all text-xl leading-none font-bold">✕</button>
             </div>
 
             <p class="text-[10px] text-emerald-600 bg-emerald-50 border border-emerald-100 rounded-lg px-3 py-1.5 flex items-center gap-1.5"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> 所有設定會即時自動儲存，調整後直接關閉即可。</p>
@@ -1189,12 +1201,48 @@
     </div>
 
     <!-- 彈出模態框：帳號 / 登入 -->
-    <div id="modal-account" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
+    <div id="modal-account" onclick="if(event.target===this)closeAccountModal()" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
         <div class="bg-white border border-sky-200 w-full max-w-sm rounded-2xl p-6 shadow-xl space-y-4">
             <div class="flex justify-between items-center border-b border-sky-100 pb-3">
                 <h3 class="text-sm font-extrabold text-sky-950 flex items-center gap-2"><i data-lucide="user-circle" class="w-4 h-4 text-sky-600"></i> 帳號中心</h3>
-                <button onclick="closeAccountModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-4 h-4"></i></button>
+                <button onclick="closeAccountModal()" title="關閉" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-white hover:bg-rose-500 transition-all text-xl leading-none font-bold">✕</button>
             </div>
+
+            <!-- ☁️ 雲端帳號（Firebase / Google）— 跨裝置同步 -->
+            <div class="bg-sky-50/70 border border-sky-200 rounded-xl p-3 space-y-2">
+                <div class="flex items-center justify-between">
+                    <span class="text-[11px] font-black text-sky-800 flex items-center gap-1.5"><i data-lucide="cloud" class="w-3.5 h-3.5"></i> 雲端帳號（跨裝置同步）</span>
+                    <span id="cloud-status-badge" class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-slate-200 text-slate-600">未啟用</span>
+                </div>
+
+                <!-- 已登入雲端 -->
+                <div id="cloud-signed-in" class="hidden space-y-2 text-center">
+                    <p class="text-[10px] text-slate-500">目前雲端帳號</p>
+                    <p id="cloud-user-email" class="text-sm font-black text-sky-700 truncate">—</p>
+                    <p id="cloud-sync-note" class="text-[10px] text-emerald-600">✅ 資料已雲端同步，換裝置登入即可取回。</p>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="cloudSyncNow()" class="bg-white border border-sky-200 text-sky-700 text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1"><i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> 立即同步</button>
+                        <button onclick="cloudSignOut()" class="bg-white border border-sky-200 text-slate-700 text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1"><i data-lucide="log-out" class="w-3.5 h-3.5"></i> 登出雲端</button>
+                    </div>
+                </div>
+
+                <!-- 已設定但未登入 -->
+                <div id="cloud-ready" class="hidden space-y-2">
+                    <button onclick="cloudSignInGoogle()" class="w-full bg-white border border-sky-300 text-slate-700 text-xs font-bold py-2.5 rounded-lg flex items-center justify-center gap-2 hover:bg-sky-50 shadow-sm">
+                        <span class="text-base font-black" style="font-family:Arial"><span style="color:#4285F4">G</span><span style="color:#EA4335">o</span><span style="color:#FBBC05">o</span><span style="color:#4285F4">g</span><span style="color:#34A853">l</span><span style="color:#EA4335">e</span></span> 使用 Google 登入
+                    </button>
+                    <button onclick="cloudShowSetup()" class="text-[10px] text-slate-400 hover:underline w-full text-center">重新設定雲端 / 更換專案</button>
+                </div>
+
+                <!-- 尚未設定（貼設定即可，免改程式碼） -->
+                <div id="cloud-setup" class="space-y-2">
+                    <p class="text-[10px] text-slate-500 leading-relaxed">貼上你的 <b>Firebase 設定</b> 即可啟用跨裝置同步（建立步驟見視窗下方說明連結）。</p>
+                    <textarea id="cloud-config-input" placeholder='貼上 firebaseConfig，例如：&#10;{&#10;  "apiKey": "...",&#10;  "authDomain": "xxx.firebaseapp.com",&#10;  "projectId": "xxx",&#10;  "appId": "..."&#10;}' class="w-full h-24 bg-white border border-sky-200 rounded-lg px-2 py-1.5 text-[10px] font-mono text-slate-800 focus:outline-none"></textarea>
+                    <button onclick="cloudSaveConfig()" class="w-full bg-sky-500 hover:bg-sky-600 text-white text-xs font-black py-2 rounded-lg flex items-center justify-center gap-1.5"><i data-lucide="cloud-cog" class="w-4 h-4"></i> 啟用雲端登入</button>
+                </div>
+            </div>
+
+            <div class="text-center"><span class="text-[10px] text-slate-400">— 或使用本機帳號（僅存這台瀏覽器）—</span></div>
 
             <!-- 已登入檢視 -->
             <div id="account-logged-in" class="hidden space-y-3 text-center">
@@ -1222,6 +1270,9 @@
                 </div>
                 <p class="text-[10px] text-slate-400 text-center pt-1">※ 本機端帳號系統，密碼僅以雜湊存於此瀏覽器，請勿使用重要密碼。</p>
             </div>
+
+            <!-- 固定關閉鈕（兩種檢視都看得到） -->
+            <button onclick="closeAccountModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-2.5 rounded-xl mt-1">關閉視窗</button>
         </div>
     </div>
 
@@ -1238,6 +1289,10 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <!-- YouTube IFrame Player API（背景播放 YouTube 連結） -->
     <script src="https://www.youtube.com/iframe_api"></script>
+    <!-- Firebase（雲端登入 + 跨裝置資料同步；未設定時不影響本機使用） -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
     <script>
         // 100% 本地狀態池
         const DEFAULT_STATE = {
@@ -1358,6 +1413,9 @@
             startSystemClock();
             switchTab(state.activeTab);
             renderAll();
+
+            // 若先前已設定雲端，初始化並還原登入狀態（onAuthStateChanged 會自動取回資料）
+            if (getCloudConfig()) { initCloud(); }
         };
 
         function saveStateToLocalStorage() {
@@ -1366,6 +1424,8 @@
             } catch (e) {
                 console.warn("LocalStorage 寫入失敗");
             }
+            // 已登入雲端 → 排程同步（防抖）
+            if (typeof scheduleCloudSync === 'function') scheduleCloudSync();
         }
 
         function loadStateFromLocalStorage() {
@@ -1725,10 +1785,13 @@
                 card.className = "absolute rounded-xl border border-sky-100/90 shadow-sm overflow-hidden flex flex-col justify-between p-2 bg-white/95 transition-all hover:shadow-md hover:scale-[1.01] hover:z-20";
                 
                 card.style.top = `${t.totalMins}px`;
-                card.style.height = `${heightVal - 6}px`; 
+                card.style.height = `${heightVal - 6}px`;
                 card.style.left = `calc(${leftOffset}% + 6px)`;
                 card.style.width = `calc(${colWidth}% - 12px)`;
-                
+                card.style.cursor = "pointer";
+                card.title = "點擊編輯此事項";
+                card.onclick = (e) => editTask(t.id, e);
+
                 card.innerHTML = `
                     <div class="absolute top-0 left-0 w-1.5 h-full" style="background-color: ${cat.color}"></div>
                     <div class="pl-2 pr-1.5 flex-1 min-w-0 flex flex-col justify-between h-full">
@@ -1874,7 +1937,7 @@
                     const cat = state.categories.find(c => c.id === t.categoryId) || { color: '#64748b' };
                     const isDone = t.status === 'completed';
                     taskListHtml += `
-                        <div class="bg-white p-2 rounded-lg border border-sky-100 text-[10px] flex items-center justify-between gap-1 ${isDone ? 'opacity-50' : ''}">
+                        <div onclick="editTask('${t.id}', event)" title="點擊編輯此事項" class="bg-white p-2 rounded-lg border border-sky-100 text-[10px] flex items-center justify-between gap-1 cursor-pointer hover:border-sky-300 ${isDone ? 'opacity-50' : ''}">
                             <div class="flex items-center gap-1 min-w-0">
                                 <span class="w-1.5 h-1.5 rounded-full shrink-0" style="background-color: ${cat.color}"></span>
                                 <span class="font-bold text-slate-700 truncate ${isDone ? 'line-through' : ''}">${t.name}</span>
@@ -2148,17 +2211,9 @@
                                 <span class="text-[9px] text-slate-400 font-mono truncate max-w-[80px]">
                                     ${dueText}
                                 </span>
-                                <div class="flex items-center gap-0.5 bg-slate-50 border border-slate-100 rounded-lg p-0.5 shrink-0">
-                                    <button onclick="editTask('${task.id}', event)" class="p-1 text-sky-600 hover:bg-sky-100 rounded transition-all" title="編輯事項">
-                                        <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
-                                    </button>
-                                    <button onclick="deleteTask('${task.id}', event)" class="p-1 text-rose-500 hover:bg-rose-100 rounded transition-all" title="刪除事項">
-                                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                                    </button>
-                                </div>
                             </div>
                         </div>
-                        <h4 class="text-xs font-bold transition-colors ${titleStyle}">${task.name}</h4>
+                        <h4 onclick="editTask('${task.id}', event)" title="點擊編輯此事項" class="text-xs font-bold transition-colors cursor-pointer hover:underline ${titleStyle}">${task.name}</h4>
                         ${task.desc ? `<p class="text-[11px] text-slate-500 leading-relaxed">${task.desc}</p>` : ''}
                     </div>
 
@@ -2193,6 +2248,12 @@
                                 </button>
                             ` : ''}
                         </div>
+                    </div>
+
+                    <!-- 永遠可見：編輯 / 刪除（刪除＝整筆無痕消失） -->
+                    <div class="flex items-center justify-end gap-2 pt-2 mt-1 border-t border-sky-100">
+                        <button onclick="editTask('${task.id}', event)" class="text-sky-700 bg-sky-50 hover:bg-sky-100 border border-sky-200 font-bold px-3 py-1 rounded-lg text-[11px] flex items-center gap-1">✏️ 編輯</button>
+                        <button onclick="deleteTask('${task.id}', event)" title="刪除後此事項會完全消失" class="text-white bg-rose-500 hover:bg-rose-600 font-bold px-3 py-1 rounded-lg text-[11px] flex items-center gap-1">🗑️ 刪除</button>
                     </div>
                 `;
 
@@ -2246,7 +2307,7 @@
                     const st = statusMap[t.status] || statusMap.todo;
                     const done = t.status === 'completed' || t.status === 'cancelled';
                     rows += `
-                        <div class="flex items-center justify-between gap-2 bg-white border border-sky-100 rounded-lg px-2.5 py-1.5">
+                        <div onclick="editTask('${t.id}', event)" title="點擊編輯此事項" class="flex items-center justify-between gap-2 bg-white border border-sky-100 rounded-lg px-2.5 py-1.5 cursor-pointer hover:border-sky-300">
                             <span class="text-[11px] font-bold text-slate-700 truncate ${done ? 'line-through text-slate-400' : ''}">${t.name}</span>
                             <div class="flex items-center gap-1 shrink-0">
                                 <span class="text-[8px] px-1.5 py-0.5 rounded font-bold ${st.cls}">${st.label}</span>
@@ -2307,6 +2368,9 @@
             updateCategoryDropdowns();
             const modal = document.getElementById("modal-task");
             const modalTitle = document.getElementById("task-modal-title");
+            const delBtn = document.getElementById("task-modal-delete-btn");
+            // 編輯既有事項才顯示「刪除」鈕
+            if (delBtn) delBtn.classList.toggle("hidden", !taskId);
 
             if (taskId) {
                 const task = state.tasks.find(t => t.id === taskId);
@@ -2469,6 +2533,17 @@
             showToast("🗑️ 時空事項已被成功刪除！");
             saveStateToLocalStorage();
             renderAll();
+        }
+
+        // 從編輯視窗直接「無痕刪除」：把該事項從所有清單/行事曆中徹底移除
+        function deleteTaskFromModal() {
+            const id = document.getElementById("task-modal-id").value;
+            if (!id) { closeTaskModal(); return; }
+            state.tasks = state.tasks.filter(t => t.id !== id);
+            closeTaskModal();
+            saveStateToLocalStorage();
+            renderAll();
+            showToast("🗑️ 已刪除此事項。");
         }
 
         function editTask(taskId, event) {
@@ -2686,18 +2761,11 @@
                         <p class="text-[10px] text-sky-600 font-bold flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> ${r.startTime || '12:00'} · ${r.duration || 60} 分鐘</p>
                     </div>
 
-                    <div class="flex items-center justify-between mt-4 pt-3 border-t border-sky-100 text-[11px]">
-                        <button onclick="dispatchRoutineToTasksOnDate('${r.id}', '${selectedCalendarDate}', event)" class="bg-sky-50 text-sky-700 border border-sky-200 px-3 py-1.5 rounded-lg hover:bg-sky-500 hover:text-white transition-all font-bold flex items-center gap-1 shadow-sm">
-                            <i data-lucide="send" class="w-3.5 h-3.5"></i>
-                            派發至當日
-                        </button>
+                    <div class="flex items-center justify-between gap-1 mt-4 pt-3 border-t border-sky-100 text-[11px]">
+                        <button onclick="dispatchRoutineToTasksOnDate('${r.id}', '${selectedCalendarDate}', event)" class="bg-sky-50 text-sky-700 border border-sky-200 px-2.5 py-1 rounded-lg hover:bg-sky-500 hover:text-white transition-all font-bold shadow-sm">📤 派發</button>
                         <div class="flex items-center gap-1">
-                            <button onclick="editRoutine('${r.id}', event)" class="text-slate-400 hover:text-sky-600 p-1" title="編輯此模板">
-                                <i data-lucide="pencil" class="w-4 h-4"></i>
-                            </button>
-                            <button onclick="deleteRoutine('${r.id}', event)" class="text-slate-400 hover:text-rose-500 p-1" title="刪除此常用模板">
-                                <i data-lucide="trash-2" class="w-4 h-4"></i>
-                            </button>
+                            <button onclick="editRoutine('${r.id}', event)" class="text-sky-700 bg-sky-50 hover:bg-sky-100 border border-sky-200 font-bold px-2.5 py-1 rounded-lg">✏️ 編輯</button>
+                            <button onclick="deleteRoutine('${r.id}', event)" class="text-white bg-rose-500 hover:bg-rose-600 font-bold px-2.5 py-1 rounded-lg">🗑️ 刪除</button>
                         </div>
                     </div>
                 `;
@@ -2868,13 +2936,9 @@
                     <div class="space-y-1">
                         <div class="flex justify-between items-start">
                             <span class="text-[9px] bg-sky-50 text-sky-600 border border-sky-200 px-2.5 py-0.5 rounded-full font-bold uppercase">Countdown</span>
-                            <div class="flex items-center gap-1">
-                                <button onclick="editCountdown('${cd.id}', event)" class="text-slate-400 hover:text-sky-600" title="編輯此倒數">
-                                    <i data-lucide="pencil" class="w-4 h-4"></i>
-                                </button>
-                                <button onclick="deleteCountdown('${cd.id}', event)" class="text-slate-400 hover:text-rose-500" title="刪除此倒數">
-                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                </button>
+                            <div class="flex items-center gap-1 text-[11px]">
+                                <button onclick="editCountdown('${cd.id}', event)" class="text-sky-700 bg-sky-50 hover:bg-sky-100 border border-sky-200 font-bold px-2.5 py-1 rounded-lg">✏️ 編輯</button>
+                                <button onclick="deleteCountdown('${cd.id}', event)" class="text-white bg-rose-500 hover:bg-rose-600 font-bold px-2.5 py-1 rounded-lg">🗑️ 刪除</button>
                             </div>
                         </div>
                         <h4 class="text-xs font-bold text-slate-800">${cd.title}</h4>
@@ -3335,15 +3399,13 @@
                             <span class="flex items-center gap-1 text-[9px] text-sky-600 font-bold mt-0.5"><i data-lucide="${soundIcon}" class="w-3 h-3"></i> ${daysLabel}</span>
                         </div>
                     </div>
-                    <div class="flex items-center gap-2 shrink-0">
-                        <button onclick="editAlarm('${al.id}', event)" class="text-slate-400 hover:text-sky-600 p-1" title="編輯鬧鐘"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
-                        <label class="relative inline-flex items-center cursor-pointer">
+                    <div class="flex items-center gap-1.5 shrink-0 text-[11px]">
+                        <label class="relative inline-flex items-center cursor-pointer mr-0.5" title="啟用 / 停用">
                             <input type="checkbox" onchange="toggleAlarmActive('${al.id}', this, event)" class="sr-only peer" ${al.active ? 'checked' : ''}>
                             <div class="w-8 h-4.5 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-empty after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-sky-500"></div>
                         </label>
-                        <button onclick="deleteAlarm('${al.id}', event)" class="text-slate-400 hover:text-rose-500 p-1" title="刪除鬧鐘">
-                            <i data-lucide="trash" class="w-3.5 h-3.5"></i>
-                        </button>
+                        <button onclick="editAlarm('${al.id}', event)" class="text-sky-700 bg-sky-50 hover:bg-sky-100 border border-sky-200 font-bold px-2 py-1 rounded-lg">✏️ 編輯</button>
+                        <button onclick="deleteAlarm('${al.id}', event)" class="text-white bg-rose-500 hover:bg-rose-600 font-bold px-2 py-1 rounded-lg">🗑️ 刪除</button>
                     </div>
                 `;
                 list.appendChild(item);
@@ -3484,6 +3546,7 @@
             const m = Math.floor((timerSecondsLeft % 3600) / 60);
             const s = timerSecondsLeft % 60;
             document.getElementById("timer-display").textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+            syncTimerToggles();
         }
 
         function toggleTimerCountdown() {
@@ -3545,8 +3608,34 @@
 
         function triggerTimerAlarm() {
             showToast("🔔 倒數計時結束囉！");
-            playSynthesizedTone(880, 0.4); 
-            setTimeout(() => playSynthesizedTone(880, 0.4), 200);
+            const soundOn = !state.prefs || state.prefs.timerSound !== false;
+            const vibrateOn = !state.prefs || state.prefs.timerVibrate !== false;
+            if (soundOn) {
+                playSynthesizedTone(880, 0.4);
+                setTimeout(() => playSynthesizedTone(988, 0.4), 250);
+                setTimeout(() => playSynthesizedTone(880, 0.5), 550);
+            }
+            if (vibrateOn && navigator.vibrate) {
+                navigator.vibrate([300, 120, 300, 120, 500]); // 手機/平板會震動
+            }
+        }
+        function setTimerSound(on) {
+            if (!state.prefs) state.prefs = {};
+            state.prefs.timerSound = !!on;
+            saveStateToLocalStorage();
+        }
+        function setTimerVibrate(on) {
+            if (!state.prefs) state.prefs = {};
+            state.prefs.timerVibrate = !!on;
+            saveStateToLocalStorage();
+            if (on && navigator.vibrate) navigator.vibrate(150); // 立即試震一下
+            if (on && !navigator.vibrate) showToast("ℹ️ 此裝置/瀏覽器不支援震動（手機或平板較有效）。");
+        }
+        function syncTimerToggles() {
+            const s = document.getElementById("timer-sound-enable");
+            const v = document.getElementById("timer-vibrate-enable");
+            if (s) s.checked = !state.prefs || state.prefs.timerSound !== false;
+            if (v) v.checked = !state.prefs || state.prefs.timerVibrate !== false;
         }
 
         function updateStopwatchUI() {
@@ -4038,12 +4127,18 @@
             if (aud) aud.classList.add('hidden');
             if (wrap) {
                 wrap.classList.remove('hidden');
+                const isWeb = (location.protocol === 'http:' || location.protocol === 'https:');
+                const originParam = isWeb ? ('&origin=' + encodeURIComponent(location.origin)) : '';
+                const fileWarn = isWeb ? '' :
+                    '<div class="text-[10px] text-rose-600 bg-rose-50 px-2 py-1 font-bold">⚠️ 偵測到你是用「本機檔案 file://」開啟，YouTube 會出現錯誤 153 無法播放。請改用網址（GitHub Pages 等）開啟本頁。</div>';
                 wrap.innerHTML =
+                    fileWarn +
                     '<iframe id="yt-frame" width="100%" height="190" style="display:block;border:0" ' +
+                    'referrerpolicy="strict-origin-when-cross-origin" ' +
                     'src="https://www.youtube.com/embed/' + encodeURIComponent(track.videoId) +
-                    '?autoplay=1&playsinline=1&rel=0" ' +
+                    '?autoplay=1&playsinline=1&rel=0&enablejsapi=1' + originParam + '" ' +
                     'allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>' +
-                    '<div class="text-[10px] text-slate-400 px-2 py-1">若顯示「無法播放」，多半是該影片停用嵌入，請換一支；音量請用播放器內的喇叭鈕調整。 ' +
+                    '<div class="text-[10px] text-slate-400 px-2 py-1">若顯示「無法播放 / 錯誤 153」，多半是用本機檔案開啟或該影片停用嵌入，請換網址開啟或換一支；音量請用播放器內的喇叭鈕調整。 ' +
                     '<a href="https://www.youtube.com/watch?v=' + encodeURIComponent(track.videoId) + '" target="_blank" rel="noopener" class="text-sky-600 font-bold underline">在 YouTube 開啟</a></div>';
                 musicIsPlaying = true;
                 renderPlaylist(); updateFocusUI();
@@ -4083,23 +4178,53 @@
                 list.innerHTML = `<p class="text-[11px] text-slate-400 text-center py-4">清單是空的，貼上音樂連結或上傳檔案來建立你的專注歌單。</p>`;
                 return;
             }
-            state.playlist.forEach(track => {
+            state.playlist.forEach((track, idx) => {
                 const active = track.id === state.currentTrackId;
                 const row = document.createElement("div");
-                row.className = `flex items-center gap-2 p-2 rounded-xl border transition-all ${active ? 'bg-sky-50 border-sky-300' : 'bg-white border-sky-100 hover:border-sky-200'}`;
+                row.className = `flex items-center gap-1.5 p-2 rounded-xl border transition-all ${active ? 'bg-sky-50 border-sky-300' : 'bg-white border-sky-100 hover:border-sky-200'}`;
                 row.innerHTML = `
-                    <button onclick="playTrack('${track.id}')" class="text-sky-600 hover:text-sky-800 shrink-0" title="播放">
-                        <i data-lucide="${active && musicIsPlaying ? 'pause-circle' : 'play-circle'}" class="w-5 h-5"></i>
-                    </button>
+                    <div class="flex flex-col shrink-0 -my-1 text-sm leading-none">
+                        <button onclick="moveTrack('${track.id}', -1, event)" class="text-slate-400 hover:text-sky-600 ${idx === 0 ? 'opacity-20 pointer-events-none' : ''}" title="上移">▲</button>
+                        <button onclick="moveTrack('${track.id}', 1, event)" class="text-slate-400 hover:text-sky-600 ${idx === state.playlist.length - 1 ? 'opacity-20 pointer-events-none' : ''}" title="下移">▼</button>
+                    </div>
+                    <button onclick="playTrack('${track.id}')" class="shrink-0 text-base bg-sky-100 hover:bg-sky-200 text-sky-700 w-7 h-7 rounded-full flex items-center justify-center" title="播放 / 暫停">${active && musicIsPlaying ? '⏸' : '▶'}</button>
                     <div class="flex-1 min-w-0">
                         <span class="block text-[11px] font-bold text-slate-700 truncate">${track.title}</span>
                         <span class="block text-[9px] ${track.type === 'youtube' ? 'text-rose-500 font-bold' : 'text-slate-400'}">${track.type === 'file' ? '本機檔案' : (track.type === 'youtube' ? '▶ YouTube' : '網路連結')}</span>
                     </div>
-                    <button onclick="removeTrack('${track.id}', event)" class="text-slate-300 hover:text-rose-500 shrink-0" title="移除"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    <button onclick="renameTrack('${track.id}', event)" class="shrink-0 text-[11px] font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 border border-sky-200 px-2 py-1 rounded-lg" title="改名">✏️ 改名</button>
+                    <button onclick="removeTrack('${track.id}', event)" class="shrink-0 text-[11px] font-bold text-white bg-rose-500 hover:bg-rose-600 px-2 py-1 rounded-lg" title="移除">🗑️</button>
                 `;
                 list.appendChild(row);
             });
             initLucideIcons();
+        }
+        function renameTrack(id, event) {
+            if (event) event.stopPropagation();
+            const track = state.playlist.find(t => t.id === id);
+            if (!track) return;
+            const name = prompt("輸入新的曲目名稱：", track.title);
+            if (name === null) return;
+            const trimmed = name.trim();
+            if (!trimmed) { showToast("⚠️ 名稱不可空白。"); return; }
+            track.title = trimmed;
+            track.userNamed = true;
+            if (track.id === state.currentTrackId) state.focusTimer.audioTitle = trimmed;
+            saveStateToLocalStorage();
+            renderPlaylist();
+            updateFocusUI();
+            showToast("✏️ 已更名為：" + trimmed);
+        }
+        function moveTrack(id, dir, event) {
+            if (event) event.stopPropagation();
+            const i = state.playlist.findIndex(t => t.id === id);
+            const j = i + dir;
+            if (i < 0 || j < 0 || j >= state.playlist.length) return;
+            const tmp = state.playlist[i];
+            state.playlist[i] = state.playlist[j];
+            state.playlist[j] = tmp;
+            saveStateToLocalStorage();
+            renderPlaylist();
         }
 
         function getCustomTrackName() {
@@ -4427,7 +4552,9 @@
         // ==========================================
         function updateAccountChip() {
             const nameEl = document.getElementById("account-chip-name");
-            if (nameEl) nameEl.textContent = currentUser ? currentUser : '登入 / 帳號';
+            if (!nameEl) return;
+            if (cloudUser) nameEl.textContent = (cloudUser.email || cloudUser.displayName || '雲端帳號').split('@')[0];
+            else nameEl.textContent = currentUser ? currentUser : '登入 / 帳號';
         }
         function openAccountModal() {
             const loggedIn = document.getElementById("account-logged-in");
@@ -4442,6 +4569,7 @@
                 document.getElementById("account-username").value = "";
                 document.getElementById("account-password").value = "";
             }
+            refreshCloudUI();
             document.getElementById("modal-account").classList.remove("hidden");
             initLucideIcons();
         }
@@ -4492,6 +4620,170 @@
             switchTab(state.activeTab);
             renderAll();
             renderPlaylist();
+        }
+
+        // ==========================================
+        // ☁️ 雲端帳號（Firebase Auth + Firestore）
+        // ==========================================
+        const CLOUD_CONFIG_KEY = 'timeflow_firebase_config';
+        let fbApp = null, fbAuth = null, fbDb = null, cloudUser = null, cloudSyncTimer = null, cloudLoading = false;
+
+        function getCloudConfig() {
+            try { const raw = localStorage.getItem(CLOUD_CONFIG_KEY); return raw ? JSON.parse(raw) : null; } catch (e) { return null; }
+        }
+        function cloudShowSetup() {
+            document.getElementById("cloud-setup").classList.remove("hidden");
+            document.getElementById("cloud-ready").classList.add("hidden");
+        }
+        function cloudSaveConfig() {
+            const txt = document.getElementById("cloud-config-input").value.trim();
+            if (!txt) { showToast("⚠️ 請先貼上 Firebase 設定。"); return; }
+            let cfg;
+            try {
+                // 容許貼上 JS 物件或含 const firebaseConfig = {...} 的整段
+                let s = txt;
+                const m = s.match(/\{[\s\S]*\}/);
+                if (m) s = m[0];
+                // 把沒加引號的鍵補上引號，移除結尾分號
+                s = s.replace(/([{,]\s*)([A-Za-z0-9_]+)\s*:/g, '$1"$2":').replace(/,\s*}/g, '}').replace(/;$/, '');
+                cfg = JSON.parse(s);
+            } catch (e) {
+                showToast("⚠️ 設定格式看不懂，請直接從 Firebase 主控台複製 firebaseConfig 物件。");
+                return;
+            }
+            if (!cfg.apiKey || !cfg.projectId) { showToast("⚠️ 設定缺少 apiKey 或 projectId。"); return; }
+            try { localStorage.setItem(CLOUD_CONFIG_KEY, JSON.stringify(cfg)); } catch (e) {}
+            showToast("✅ 雲端設定已儲存，正在初始化…");
+            if (initCloud()) {
+                document.getElementById("cloud-setup").classList.add("hidden");
+                refreshCloudUI();
+            }
+        }
+        function initCloud() {
+            const cfg = getCloudConfig();
+            if (!cfg) return false;
+            if (typeof firebase === 'undefined') { showToast("⚠️ Firebase 元件未載入（請確認有網路）。"); return false; }
+            try {
+                if (!fbApp) {
+                    fbApp = firebase.initializeApp(cfg);
+                    fbAuth = firebase.auth();
+                    fbDb = firebase.firestore();
+                    fbAuth.onAuthStateChanged(onCloudAuthChanged);
+                }
+                return true;
+            } catch (e) {
+                console.warn("Firebase init 失敗", e);
+                showToast("⚠️ Firebase 初始化失敗，請檢查設定是否正確。");
+                return false;
+            }
+        }
+        function cloudSignInGoogle() {
+            if (!initCloud()) { showToast("⚠️ 請先設定雲端。"); cloudShowSetup(); return; }
+            const provider = new firebase.auth.GoogleAuthProvider();
+            fbAuth.signInWithPopup(provider).catch(err => {
+                console.warn(err);
+                if (err && err.code === 'auth/unauthorized-domain') {
+                    showToast("⚠️ 此網域未授權。請到 Firebase→Authentication→Settings→授權網域，加入你的網址（例：11431508.github.io）。");
+                } else {
+                    showToast("⚠️ Google 登入失敗：" + (err && err.message ? err.message : '請重試'));
+                }
+            });
+        }
+        function cloudSignOut() {
+            if (fbAuth) fbAuth.signOut();
+            showToast("🔓 已登出雲端帳號。");
+        }
+        function onCloudAuthChanged(user) {
+            cloudUser = user;
+            refreshCloudUI();
+            updateAccountChip();
+            if (user) {
+                showToast(`☁️ 已用 Google 登入：${user.email || user.displayName}`);
+                cloudPullThenMerge(user.uid);
+            }
+        }
+        function cloudPullThenMerge(uid) {
+            if (!fbDb) return;
+            cloudLoading = true;
+            fbDb.collection('users').doc(uid).get().then(doc => {
+                if (doc.exists && doc.data() && doc.data().state) {
+                    // 雲端有資料 → 以雲端為準載入
+                    try {
+                        const cloudState = JSON.parse(doc.data().state);
+                        state = Object.assign({}, JSON.parse(JSON.stringify(DEFAULT_STATE)), cloudState);
+                        saveStateToLocalStorage();
+                        applyPrefs(); updateAccountChip();
+                        switchTab(state.activeTab); renderAll(); renderPlaylist();
+                        showToast("⬇️ 已從雲端取回你的資料。");
+                    } catch (e) { console.warn(e); }
+                } else {
+                    // 雲端尚無資料 → 把目前本機資料上傳建立
+                    pushStateToCloud(true);
+                    showToast("⬆️ 已將目前資料上傳到雲端。");
+                }
+                cloudLoading = false;
+            }).catch(err => { cloudLoading = false; console.warn(err); showToast("⚠️ 讀取雲端資料失敗：" + (err.message||'')); });
+        }
+        function scheduleCloudSync() {
+            if (!cloudUser || !fbDb || cloudLoading) return;
+            clearTimeout(cloudSyncTimer);
+            cloudSyncTimer = setTimeout(() => pushStateToCloud(false), 1500);
+        }
+        function pushStateToCloud(silent) {
+            if (!cloudUser || !fbDb) return;
+            try {
+                const payload = JSON.stringify(getSyncableState());
+                if (payload.length > 950000) {
+                    if (!silent) showToast("⚠️ 資料超過雲端單筆上限(1MB)，已略過大型附件同步。");
+                }
+                fbDb.collection('users').doc(cloudUser.uid).set({
+                    state: payload,
+                    updatedAt: Date.now(),
+                    email: cloudUser.email || ''
+                }).then(() => { if (!silent) showToast("☁️ 已同步到雲端。"); })
+                  .catch(err => { console.warn(err); if (!silent) showToast("⚠️ 同步失敗：" + (err.message||'')); });
+            } catch (e) { console.warn(e); }
+        }
+        // 為避免超過 Firestore 1MB 單筆上限，雲端同步時剝除大型二進位（本機音樂檔/錄音/附件）
+        function getSyncableState() {
+            const clone = JSON.parse(JSON.stringify(state));
+            if (Array.isArray(clone.playlist)) {
+                clone.playlist = clone.playlist.filter(t => t.type !== 'file'); // 本機音檔(data URL)不上雲
+            }
+            if (clone.journals && typeof clone.journals === 'object') {
+                Object.keys(clone.journals).forEach(k => {
+                    const j = clone.journals[k];
+                    if (j && j.audio) j.audio = null;       // 錄音不上雲
+                    if (j && Array.isArray(j.attachments)) {
+                        j.attachments = j.attachments.map(a => ({ name: a.name, note: '（大型附件未雲端同步）' }));
+                    }
+                });
+            }
+            return clone;
+        }
+        function cloudSyncNow() {
+            if (!cloudUser) { showToast("⚠️ 尚未登入雲端。"); return; }
+            pushStateToCloud(false);
+        }
+        function refreshCloudUI() {
+            const cfg = getCloudConfig();
+            const badge = document.getElementById("cloud-status-badge");
+            const setup = document.getElementById("cloud-setup");
+            const ready = document.getElementById("cloud-ready");
+            const signedIn = document.getElementById("cloud-signed-in");
+            if (!badge) return;
+            if (cloudUser) {
+                badge.textContent = "已登入"; badge.className = "text-[9px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700";
+                setup.classList.add("hidden"); ready.classList.add("hidden"); signedIn.classList.remove("hidden");
+                document.getElementById("cloud-user-email").textContent = cloudUser.email || cloudUser.displayName || '已登入';
+            } else if (cfg) {
+                badge.textContent = "已設定"; badge.className = "text-[9px] font-bold px-2 py-0.5 rounded-full bg-sky-100 text-sky-700";
+                setup.classList.add("hidden"); ready.classList.remove("hidden"); signedIn.classList.add("hidden");
+            } else {
+                badge.textContent = "未啟用"; badge.className = "text-[9px] font-bold px-2 py-0.5 rounded-full bg-slate-200 text-slate-600";
+                setup.classList.remove("hidden"); ready.classList.add("hidden"); signedIn.classList.add("hidden");
+            }
+            initLucideIcons();
         }
 
         // ==========================================
@@ -4555,11 +4847,11 @@
                     const cat = state.categories.find(c => c.id === t.categoryId) || { name: '日常', color: '#64748b' };
                     const time = t.due && t.due.includes('T') ? t.due.split('T')[1].slice(0,5) : '—';
                     const done = t.status === 'completed' || t.status === 'cancelled';
-                    rows += `<div class="flex items-center gap-2 py-1.5 border-b border-sky-50 last:border-0">
+                    rows += `<div onclick="hideDayDetailPopover(); editTask('${t.id}', event)" title="點擊編輯此事項" class="flex items-center gap-2 py-1.5 border-b border-sky-50 last:border-0 cursor-pointer hover:bg-sky-50 rounded-lg px-1 -mx-1">
                         <span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:${cat.color}"></span>
                         <span class="text-[10px] font-mono text-sky-700 w-9 shrink-0">${time}</span>
                         <span class="text-[11px] ${done ? 'line-through text-slate-400' : 'text-slate-700'} truncate flex-1">${t.name}</span>
-                        <button onclick="editTask('${t.id}', event)" class="text-slate-300 hover:text-sky-600 shrink-0"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                        <i data-lucide="pencil" class="w-3 h-3 text-slate-300 shrink-0"></i>
                     </div>`;
                 });
             }
@@ -4568,7 +4860,7 @@
                     <span class="text-xs font-black text-sky-950">${d.getMonth()+1}/${d.getDate()} (週${wd})</span>
                     <div class="flex items-center gap-1.5">
                         <button onclick="openTaskOnDate('${dateStr}', event)" class="text-sky-600 hover:text-sky-800" title="於此日新增"><i data-lucide="plus" class="w-3.5 h-3.5"></i></button>
-                        <button onclick="hideDayDetailPopover()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+                        <button onclick="hideDayDetailPopover()" title="關閉" class="w-6 h-6 rounded flex items-center justify-center text-slate-500 hover:text-white hover:bg-rose-500 text-base leading-none font-bold">✕</button>
                     </div>
                 </div>
                 ${rows}`;
@@ -4610,6 +4902,24 @@
         window.saveTask = saveTask;
         window.editTask = editTask;
         window.deleteTask = deleteTask;
+        window.deleteTaskFromModal = deleteTaskFromModal;
+
+        // 按 Esc 關閉任何開啟中的彈出視窗（響鈴視窗除外，需用按鈕關）
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' || e.key === 'Esc') {
+                document.querySelectorAll('[id^="modal-"]').forEach(function(m) {
+                    if (m.id === 'modal-alarm-ringing') return;
+                    m.classList.add('hidden');
+                });
+            }
+        });
+        // 點視窗外的暗色背景即關閉（所有彈窗通用，響鈴除外）
+        document.addEventListener('click', function(e) {
+            const t = e.target;
+            if (t && t.id && t.id.indexOf('modal-') === 0 && t.id !== 'modal-alarm-ringing') {
+                t.classList.add('hidden');
+            }
+        });
         window.changeTaskStatus = changeTaskStatus;
         window.scheduleTask = scheduleTask;
         window.toggleTimeTypeFields = toggleTimeTypeFields;
@@ -4681,6 +4991,15 @@
         window.registerAccount = registerAccount;
         window.loginAccount = loginAccount;
         window.logoutAccount = logoutAccount;
+        window.cloudSaveConfig = cloudSaveConfig;
+        window.cloudShowSetup = cloudShowSetup;
+        window.cloudSignInGoogle = cloudSignInGoogle;
+        window.cloudSignOut = cloudSignOut;
+        window.cloudSyncNow = cloudSyncNow;
+        window.renameTrack = renameTrack;
+        window.moveTrack = moveTrack;
+        window.setTimerSound = setTimerSound;
+        window.setTimerVibrate = setTimerVibrate;
         window.zoomBlock = zoomBlock;
         window.restoreZoomedBlock = restoreZoomedBlock;
         window.setTaskViewMode = setTaskViewMode;
