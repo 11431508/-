@@ -864,7 +864,7 @@
             <div class="grid grid-cols-2 gap-3">
                 <div class="space-y-1" id="field-start-time-wrapper">
                     <label id="label-start-time" class="text-[11px] font-bold text-slate-500">日期與時間</label>
-                    <input type="datetime-local" id="task-modal-due" class="w-full bg-white border border-sky-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none">
+                    <input type="datetime-local" id="task-modal-due" onchange="onTaskStartChanged()" class="w-full bg-white border border-sky-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none">
                 </div>
                 <div class="space-y-1 hidden" id="field-end-time-wrapper">
                     <label class="text-[11px] font-bold text-slate-500">結束日期與時間</label>
@@ -1114,6 +1114,18 @@
             <button onclick="dismissAlarmRinging()" class="w-full bg-gradient-to-r from-sky-500 to-blue-600 text-white font-black py-3 rounded-2xl shadow-md hover:from-sky-400 hover:to-blue-500 transition-all">
                 關閉鬧鐘
             </button>
+        </div>
+    </div>
+
+    <!-- 計時器結束提醒彈窗 -->
+    <div id="modal-timer-done" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-[100] hidden p-4">
+        <div class="bg-white border-2 border-emerald-400 w-full max-w-sm rounded-3xl p-8 shadow-2xl text-center space-y-5 animate-bounce" style="animation-duration: 2.5s;">
+            <div class="w-16 h-16 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto text-4xl">⏰</div>
+            <div>
+                <h3 class="text-xl font-black text-emerald-600">時間到！</h3>
+                <p id="timer-done-label" class="text-sm text-slate-700 mt-2">倒數計時結束囉，做得好！</p>
+            </div>
+            <button onclick="dismissTimerDone()" class="w-full bg-gradient-to-r from-emerald-500 to-sky-500 text-white font-black py-3 rounded-2xl shadow-md transition-all">我知道了</button>
         </div>
     </div>
 
@@ -1473,14 +1485,39 @@
             showToast("✨ 時空資料庫已完全重設清空！");
         }
 
+        // 離線後備：網路圖示(lucide)載不出來時，用內建 emoji 對照表補上（不靠網路）
+        const LUCIDE_FALLBACK = {
+            'plus':'＋','plus-circle':'➕','trash-2':'🗑️','trash':'🗑️','pencil':'✏️',
+            'maximize-2':'⛶','maximize':'⛶','chevron-up':'▲','chevron-down':'▼','chevron-left':'◀','chevron-right':'▶',
+            'rotate-ccw':'🔄','refresh-cw':'🔄','mic':'🎤','clock':'🕒','volume-2':'🔊','timer':'⏱️','tag':'🏷️',
+            'settings':'⚙️','play':'▶️','pause':'⏸️','paperclip':'📎','moon':'🌙','moon-star':'🌙','log-out':'🚪','log-in':'🔑',
+            'hourglass':'⏳','check-square':'☑️','check':'✔️','check-circle':'✅','alarm-clock':'⏰','waves':'🌊',
+            'user':'👤','user-plus':'👤','user-circle':'👤','user-check':'👤','upload-cloud':'☁️','upload':'⬆️','download':'⬇️',
+            'trophy':'🏆','stopwatch':'⏱️','sparkles':'✨','smartphone':'📱','vibrate':'📳','skip-forward':'⏭️','skip-back':'⏮️',
+            'send':'📤','search':'🔍','save':'💾','palette':'🎨','music':'🎵','headphones':'🎧','cloud-sun':'⛅','cloud':'☁️','cloud-cog':'☁️',
+            'clipboard-list':'📋','calendar':'📅','calendar-range':'📅','calendar-plus':'📅','book-open':'📖','bell':'🔔','bell-ring':'🔔','x':'✕','square':'⏹️','sticky-note':'📝','lock':'🔒','bell-plus':'🔔','repeat':'🔁','repeat-1':'🔂'
+        };
+        function applyIconFallback() {
+            document.querySelectorAll('[data-lucide]').forEach(function(el){
+                const name = el.getAttribute('data-lucide');
+                el.textContent = LUCIDE_FALLBACK[name] || '•';
+                el.style.fontStyle = 'normal';
+                el.style.lineHeight = '1';
+                el.removeAttribute('data-lucide');
+            });
+        }
         function initLucideIcons() {
+            let ok = false;
             try {
                 if (window.lucide && typeof window.lucide.createIcons === 'function') {
                     window.lucide.createIcons();
+                    ok = true;
                 }
             } catch (e) {
                 console.warn("Lucide 圖標初始化失敗");
             }
+            // lucide 不在或某些圖示沒轉換成功 → 用 emoji 補（離線也看得到）
+            applyIconFallback();
         }
 
         function startSystemClock() {
@@ -2409,6 +2446,23 @@
             initLucideIcons();
         }
 
+        // 選好開始時間後，自動以開始時間為基準帶出結束時間（持續模式，預設 +1 小時），省去重打日期
+        function onTaskStartChanged() {
+            const type = document.getElementById("task-modal-time-type").value;
+            if (type !== 'range') return;
+            const startVal = document.getElementById("task-modal-due").value;
+            if (!startVal) return;
+            const endEl = document.getElementById("task-modal-due-end");
+            const start = new Date(startVal);
+            const end = endEl.value ? new Date(endEl.value) : null;
+            // 結束為空、或早於/等於開始 → 自動設為開始 +1 小時（同一天、以開始為基準）
+            if (!end || end <= start) {
+                const auto = new Date(start.getTime() + 60 * 60000);
+                const tzoffset = auto.getTimezoneOffset() * 60000;
+                endEl.value = new Date(auto.getTime() - tzoffset).toISOString().slice(0, 16);
+            }
+        }
+
         function toggleTimeTypeFields() {
             const type = document.getElementById("task-modal-time-type").value;
             const startWrapper = document.getElementById("field-start-time-wrapper");
@@ -2426,6 +2480,7 @@
                 endWrapper.classList.remove("hidden");
                 durationWrapper.classList.add("hidden");
                 if (labelStart) labelStart.textContent = "開始日期時間";
+                onTaskStartChanged(); // 切到持續模式時，立即以開始時間帶出結束時間
             } else if (type === 'duration') {
                 startWrapper.classList.remove("hidden");
                 endWrapper.classList.add("hidden");
@@ -3608,6 +3663,11 @@
 
         function triggerTimerAlarm() {
             showToast("🔔 倒數計時結束囉！");
+            // 跳出明顯提醒彈窗
+            const m = document.getElementById("modal-timer-done");
+            if (m) { m.classList.remove("hidden"); initLucideIcons(); }
+            // 系統通知（若已授權）
+            notify("⏰ 計時結束", "你設定的倒數時間到了！");
             const soundOn = !state.prefs || state.prefs.timerSound !== false;
             const vibrateOn = !state.prefs || state.prefs.timerVibrate !== false;
             if (soundOn) {
@@ -3636,6 +3696,21 @@
             const v = document.getElementById("timer-vibrate-enable");
             if (s) s.checked = !state.prefs || state.prefs.timerSound !== false;
             if (v) v.checked = !state.prefs || state.prefs.timerVibrate !== false;
+        }
+        function dismissTimerDone() {
+            const m = document.getElementById("modal-timer-done");
+            if (m) m.classList.add("hidden");
+        }
+        // 系統通知小工具：自動要求權限，已授權才跳系統通知（失敗也不報錯）
+        function notify(title, body) {
+            try {
+                if (!('Notification' in window)) return;
+                if (Notification.permission === 'granted') {
+                    new Notification(title, { body: body });
+                } else if (Notification.permission !== 'denied') {
+                    Notification.requestPermission().then(p => { if (p === 'granted') new Notification(title, { body: body }); });
+                }
+            } catch (e) {}
         }
 
         function updateStopwatchUI() {
@@ -3878,6 +3953,11 @@
                 mediaRecorder.stop();
                 return;
             }
+            // 錄音需「安全環境(https)」：用 file:// 本機檔案開啟會被瀏覽器封鎖
+            if (!window.isSecureContext) {
+                showToast("⚠️ 錄音需在 https 網址下使用。你現在是本機檔案(file://)開啟，瀏覽器會封鎖麥克風。請改用你的網址（GitHub Pages）開啟本頁再錄音。");
+                return;
+            }
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
                 showToast("⚠️ 此裝置或瀏覽器不支援錄音。");
                 return;
@@ -3911,7 +3991,18 @@
                 document.getElementById("journal-record-btn").classList.add("animate-pulse");
                 initLucideIcons();
                 showToast("🔴 錄音中...再按一次停止。");
-            }).catch(() => showToast("⚠️ 無法取得麥克風權限。"));
+            }).catch(err => {
+                const n = err && err.name;
+                if (n === 'NotAllowedError' || n === 'SecurityError') {
+                    showToast("⚠️ 麥克風權限被拒。請點網址列左邊的🔒鎖頭→把「麥克風」改成允許，再重試。");
+                } else if (n === 'NotFoundError' || n === 'DevicesNotFoundError') {
+                    showToast("⚠️ 找不到麥克風裝置（這台沒有麥克風？）。");
+                } else if (n === 'NotReadableError') {
+                    showToast("⚠️ 麥克風被其他程式占用，請關掉其他錄音/通話程式再試。");
+                } else {
+                    showToast("⚠️ 無法取得麥克風：" + (err && err.message ? err.message : n || '未知錯誤') + "（需 https 網址）。");
+                }
+            });
         }
         function deleteJournalAudio() {
             const dateStr = document.getElementById("journal-date").value;
@@ -4923,6 +5014,7 @@
         window.changeTaskStatus = changeTaskStatus;
         window.scheduleTask = scheduleTask;
         window.toggleTimeTypeFields = toggleTimeTypeFields;
+        window.onTaskStartChanged = onTaskStartChanged;
         
         window.openDelayModal = openDelayModal;
         window.closeDelayModal = closeDelayModal;
@@ -5000,6 +5092,7 @@
         window.moveTrack = moveTrack;
         window.setTimerSound = setTimerSound;
         window.setTimerVibrate = setTimerVibrate;
+        window.dismissTimerDone = dismissTimerDone;
         window.zoomBlock = zoomBlock;
         window.restoreZoomedBlock = restoreZoomedBlock;
         window.setTaskViewMode = setTaskViewMode;
